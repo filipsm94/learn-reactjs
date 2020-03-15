@@ -19,8 +19,8 @@ class  App extends React.Component {
   deleteCharIndexHandler = (charIndex) => {
     const text = this.state.textChar.split('');
     text.splice(charIndex, 1);
-    const updatedText = text.join('');
-    this.setState({textChar: updatedText});
+    const newText = text.join('');
+    this.setState({textChar: newText});
   }
 
   render() {
