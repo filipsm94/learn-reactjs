@@ -14,6 +14,34 @@ class  App extends React.Component {
     showPersons: false
   }
 
+  static getDerivedStateFromProps(props, state){
+    console.log('[App.js] getDerivedStateFromProps',props);
+    return null;
+  }
+
+  
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
+  }
+
+  shouldComponentUpdate(nextProps,nextState){ // should return a boolean. take a decision. because if i set false, i blocked the update of components as persons.js, then in this case return true 
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+  }
+
+  componentDidUpdate(){
+    console.log('[App.js] componentDidUpdate');
+  }
+
+  componentWillUnmount(){
+    console.log('[App.js] componentWillUnmount');
+  }
+
+  getSnapshotBeforeUpdate(){
+    console.log('[App.js] getSnapshotBeforeUpdate');
+    return null;
+  }
+
   nameChangedHandler = (event, id) => {
     const personIndex = this.state.persons.findIndex( p => {
       return p.id === id;
@@ -43,6 +71,7 @@ class  App extends React.Component {
   }
 
   render() {
+    console.log('[App.js] render')
     let persons = null;
     if(this.state.showPersons){
       persons = <Persons 

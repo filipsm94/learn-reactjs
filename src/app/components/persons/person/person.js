@@ -3,6 +3,7 @@ import classes from './person.module.css';
 
 export default class Person extends Component{
     render(){
+        console.log('[Person.js] Rendering...');
         return (
             <div className={classes.Person}>
                 <p onClick={this.props.click}>yo soy {this.props.name} y tengo {this.props.age}</p>
