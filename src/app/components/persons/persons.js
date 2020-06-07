@@ -27,10 +27,12 @@ export default class Persons extends Component {
         return {message:'paso de datos lifecycle from snapshot'};
     }
 
-    
-
     componentDidUpdate(prevProps, prevState, snapshot){
         console.log('[Persons.js] componentDidUpdate', snapshot);
+    }
+
+    componentWillUnmount(){
+        console.log('[Persons.js] componentWillUnmount');
     }
 
     render() {

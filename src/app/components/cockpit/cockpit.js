@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import stilp from './cockpit.module.css'; // Para este tipo de importacion es necesario definir el css como modulo -> algo.module.css
 
 
 const Cockpit = (props) => {
+    useEffect(() => {
+        console.log('[Cockpit.js] useEffect');
+        // here we launch a http request if we needed
+        setTimeout(()=>{
+            alert('lauch time out effect');
+        },1000);
+        return () => { // if we add a retunr to the effect, it is similar to componentWillUnmount
+            console.log('[Cockpit.js] cleanup work in useEffect');
+        }
+    },[props.persons]);// if we needed launch this effect just one time, we have to set [], but if we wants it to depends on change of varaible state, we setting [nameVariableState], example [props.persons]
     const assignedClasses = [];
     let btnClass = '';
     if(props.showPersons){
