@@ -6,7 +6,7 @@ const Cockpit = (props) => {
     const assignedClasses = [];
     let btnClass = '';
     if(props.showPersons){
-        btnClass = stilp.red;
+        btnClass = stilp.Red;
     }
     if(props.persons.length <= 2){
         assignedClasses.push(stilp.red);
