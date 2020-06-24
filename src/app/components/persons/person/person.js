@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classes from './person.module.css';
 
 export default class Person extends Component{
@@ -10,5 +11,12 @@ export default class Person extends Component{
                 <input type="text" onChange={this.props.changed} value={this.props.name}/>
             </div>
         );
-    };
+    };   
+}
+
+Person.propTypes ={
+    click: PropTypes.func,
+    name: PropTypes.string,
+    age: PropTypes.number,
+    changed: PropTypes.func
 }
