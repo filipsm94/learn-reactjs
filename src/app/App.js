@@ -12,35 +12,8 @@ class  App extends React.Component {
       {id:'asdg3', name: 'kata', age:19}
     ],
     showPersons: false,
-    showCockpit: true
-  }
-
-  static getDerivedStateFromProps(props, state){
-    console.log('[App.js] getDerivedStateFromProps',props);
-    return null;
-  }
-
-  
-  componentDidMount(){
-    console.log('[App.js] componentDidMount');
-  }
-
-  shouldComponentUpdate(nextProps,nextState){ // should return a boolean. take a decision. because if i set false, i blocked the update of components as persons.js, then in this case return true 
-    console.log('[App.js] shouldComponentUpdate');
-    return true;
-  }
-
-  componentDidUpdate(){
-    console.log('[App.js] componentDidUpdate');
-  }
-
-  componentWillUnmount(){
-    console.log('[App.js] componentWillUnmount');
-  }
-
-  getSnapshotBeforeUpdate(){
-    console.log('[App.js] getSnapshotBeforeUpdate');
-    return null;
+    showCockpit: true,
+    countChanges: 0
   }
 
   nameChangedHandler = (event, id) => {
@@ -56,7 +29,12 @@ class  App extends React.Component {
     const persons = [...this.state.persons];
     persons[personIndex]= person;
 
-    this.setState({ persons: persons});
+    this.setState((prevProp, props )=> { 
+      return {
+        persons: persons,
+        countChanges: prevProp.countChanges + 1
+      }
+    });
   }
 
   deletePersonsHandler = (personIndex) => {
