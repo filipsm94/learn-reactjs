@@ -1,12 +1,12 @@
 import React from 'react';
 import Fake from '../../hoc/fake';
+import Toolbar from '../navigation/toolbar/toolbar';
+import classes from './layout.module.css';
 
 const layout = (props) => (
     <Fake>
-        <div>
-            Contenedores logo, menu, y barra lateral
-        </div>
-        <main>
+        <Toolbar />
+        <main className={classes.Content}>
             {props.children}
         </main>
     </Fake>
