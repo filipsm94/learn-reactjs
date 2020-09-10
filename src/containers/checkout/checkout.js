@@ -43,7 +43,7 @@ export default class Checkout extends Component{
                     btnComplete={this.continueBtnHandler}
                     btnCancel={this.cancelBtnHandler}
                 ></CheckoutSummary>
-                <Route path={this.props.match.path+'/contact-data'} component={ContactData}></Route>
+                <Route path={this.props.match.path+'/contact-data'} render={() => (<ContactData ingredients={this.state.ingredients} />)}></Route>
             </div>
         )
     }

@@ -4,6 +4,8 @@ import Burger from '../../components/burger/burger';
 import BuildControls from '../../components/burger/buildControls/buildControls';
 import Modal from '../../components/UI/modal/modal';
 import OrderSummary from '../../components/burger/orderSummary/orderSummary';
+import axiosOrder from '../../axios-orders';
+import Spinner from "../../components/UI/spinner/spinner";
 
 const INGREDIENT_PRICES = {
     salad:0.5,
@@ -23,7 +25,8 @@ export default class BurgerBuilder extends Component {
         },
         totalPrice: 4,
         purchaseble: false,
-        purchasing: false
+        purchasing: false,
+        loading:false
     }
 
     updatePurchaseState(ingredients) {
@@ -79,16 +82,37 @@ export default class BurgerBuilder extends Component {
         this.setState({purchasing:false});
     }
 
-    pruchasePayContinueHandler = () =>{
-        const queryParams = [];
-        for(let i in this.state.ingredients){
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+    pruchasePayContinueHandler = () => {
+        this.setState({loading: true})
+        const orderRq = {
+            ingredients:this.state.ingredients,
+            price: this.state.totalPrice,
+            customer:{
+                name:'Felipe',
+                addres: {
+                    street: 'calle 1',
+                    postalCode: 119102,
+                    country:'colombia'
+                },
+                email:'fmesa@gmail.com'
+            },
+            deliveryMethod:'fast'
+
         }
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname:'/checkout',
-            search: '?' + queryString
-        });
+        axiosOrder.post('/orders.json',orderRq)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err))
+            .finally(()=> this.setState({loading: false, purchasing: false}))
+
+        // const queryParams = [];
+        // for(let i in this.state.ingredients){
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        // }
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname:'/checkout',
+        //     search: '?' + queryString
+        // });
     }
     
     render(){
@@ -98,12 +122,16 @@ export default class BurgerBuilder extends Component {
         for(let key in disabledInfo){
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
+        let orderSummary =  <OrderSummary ingredients={this.state.ingredients}
+        purchaseCancel={this.purchasingCancelHandler}
+        purchaseContinue={this.pruchasePayContinueHandler} />
+        if(this.state.loading){
+            orderSummary = <Spinner />
+        }
         return(
             <Fake>
                 <Modal show={this.state.purchasing} closeModal={this.purchasingCancelHandler}>
-                    <OrderSummary ingredients={this.state.ingredients}
-                        purchaseCancel={this.purchasingCancelHandler}
-                        purchaseContinue={this.pruchasePayContinueHandler} />
+                    {orderSummary}
                 </Modal>
                 <Burger ingredients={this.state.ingredients}></Burger>
                 <BuildControls

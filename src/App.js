@@ -1,8 +1,9 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/layout';
 import BurgerBuilder from './containers/burgerBuilder/burgerBuilder';
 import Checkout from './containers/checkout/checkout';
-import { Switch, Route } from 'react-router-dom';
+import Orders from './containers/checkout/orders/orders';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Switch>
           <Route path="/" component={BurgerBuilder} exact></Route>
           <Route path="/checkout" component={Checkout}></Route>
+          <Route path="/orders" component={Orders}></Route>
         </Switch>
       </Layout>
     </div>
