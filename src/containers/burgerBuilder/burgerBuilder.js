@@ -8,25 +8,25 @@ import axiosOrder from '../../axios-orders';
 import Spinner from "../../components/UI/spinner/spinner";
 
 const INGREDIENT_PRICES = {
-    salad:0.5,
+    salad: 0.5,
     cheese: 0.4,
     meat: 1.2,
-    bacon:0.75
+    bacon: 0.75
 };
 
 export default class BurgerBuilder extends Component {
 
     state = {
-        ingredients:{
-            salad:0,
-            bacon:0,
-            cheese:0,
-            meat:0,
+        ingredients: {
+            salad: 0,
+            bacon: 0,
+            cheese: 0,
+            meat: 0,
         },
         totalPrice: 4,
         purchaseble: false,
         purchasing: false,
-        loading:false
+        loading: false
     }
 
     updatePurchaseState(ingredients) {
@@ -35,13 +35,13 @@ export default class BurgerBuilder extends Component {
                 return ingredients[igKey];
             }).reduce((sum, el) => {
                 return sum + el;
-            },0);
-            this.setState({purchaseble: sum > 0})
+            }, 0);
+        this.setState({ purchaseble: sum > 0 })
     }
 
     addIngredientsHandler = (type) => {
         const oldCount = this.state.ingredients[type];
-        const updatedCount = oldCount +1;
+        const updatedCount = oldCount + 1;
         const updatedIngredients = {
             ...this.state.ingredients
         }
@@ -58,7 +58,7 @@ export default class BurgerBuilder extends Component {
 
     removeIngredientsHandler = (type) => {
         const oldCount = this.state.ingredients[type];
-        if(oldCount <= 0) return;
+        if (oldCount <= 0) return;
         const updatedCount = oldCount - 1;
         const updatedIngredients = {
             ...this.state.ingredients
@@ -75,60 +75,62 @@ export default class BurgerBuilder extends Component {
     }
 
     purchasingHandler = () => {
-        this.setState({purchasing:true});
+        this.setState({ purchasing: true });
     }
 
     purchasingCancelHandler = () => {
-        this.setState({purchasing:false});
+        this.setState({ purchasing: false });
     }
 
     pruchasePayContinueHandler = () => {
-        this.setState({loading: true})
+        this.setState({ loading: true })
         const orderRq = {
-            ingredients:this.state.ingredients,
+            ingredients: this.state.ingredients,
             price: this.state.totalPrice,
-            customer:{
-                name:'Felipe',
+            customer: {
+                name: 'Felipe',
                 addres: {
                     street: 'calle 1',
                     postalCode: 119102,
-                    country:'colombia'
+                    country: 'colombia'
                 },
-                email:'fmesa@gmail.com'
+                email: 'fmesa@gmail.com'
             },
-            deliveryMethod:'fast'
+            deliveryMethod: 'fast'
 
         }
-        axiosOrder.post('/orders.json',orderRq)
-            .then((res) => console.log(res))
+        axiosOrder.post('/orders.json', orderRq)
+            .then((res) => {
+                const queryParams = [];
+                for (let i in this.state.ingredients) {
+                    queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+                }
+                const queryString = queryParams.join('&');
+                this.props.history.push({
+                    pathname: '/checkout',
+                    search: '?' + queryString
+                });
+            })
             .catch((err) => console.log(err))
-            .finally(()=> this.setState({loading: false, purchasing: false}))
+            .finally(() => this.setState({ loading: false, purchasing: false }))
 
-        // const queryParams = [];
-        // for(let i in this.state.ingredients){
-        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        // }
-        // const queryString = queryParams.join('&');
-        // this.props.history.push({
-        //     pathname:'/checkout',
-        //     search: '?' + queryString
-        // });
+
     }
-    
-    render(){
+
+    render() {
         const disabledInfo = {
             ...this.state.ingredients
         };
-        for(let key in disabledInfo){
+        for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
-        let orderSummary =  <OrderSummary ingredients={this.state.ingredients}
-        purchaseCancel={this.purchasingCancelHandler}
-        purchaseContinue={this.pruchasePayContinueHandler} />
-        if(this.state.loading){
+        let orderSummary = <OrderSummary ingredients={this.state.ingredients}
+            purchaseCancel={this.purchasingCancelHandler}
+            purchaseContinue={this.pruchasePayContinueHandler} />
+        if (this.state.loading) {
             orderSummary = <Spinner />
         }
-        return(
+        return (
             <Fake>
                 <Modal show={this.state.purchasing} closeModal={this.purchasingCancelHandler}>
                     {orderSummary}
