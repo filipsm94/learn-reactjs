@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Button from '../../../components/UI/button/button';
 import Input from '../../../components/UI/input/input';
 import classes from './contactData.module.css';
 
-export default class ContactData extends Component{
+class ContactData extends Component{
 
     state = {
         orderForm: {
@@ -68,7 +69,8 @@ export default class ContactData extends Component{
 
     orderhandler = (event) => {
         event.preventDefault();
-        console.log('ingredients', this.props.ingredients);
+        console.log('ingredients', this.props.ings);
+        console.log('total Price', this.props.totPrice);
     }
 
     inputChangedHandler = (event, inputIdentifier) =>{
@@ -110,3 +112,12 @@ export default class ContactData extends Component{
         );
     }
 }
+
+const mapStatetoProps = state => {
+    return {
+        ings : state.ingredients,
+        totPrice: state.totalPrice,
+    }
+}
+
+export default connect(mapStatetoProps)(ContactData)
